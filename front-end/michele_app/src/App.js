@@ -38,7 +38,7 @@ class App extends Component {
     return (
       <div className="container">
         <h1>bookmars! Celebrate!</h1>
-        <NewForm />
+        <NewForm getBookmarks={this.getBookmarks} baseURL={baseURL} />
         <table>
           <tbody>
             {this.state.bookmarks.map(bookmarks => {
