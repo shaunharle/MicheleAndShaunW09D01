@@ -19,23 +19,37 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      bookmars: []
+      bookmarks: []
     };
-    this.getHolidays = this.getHolidays.bind(this);
+    this.getBookmarks = this.getBookmarks.bind(this);
   }
   componentDidMount() {
-    this.getHolidays();
+    this.getBookmarks();
   }
-  async getHolidays() {
+  async getBookmarks() {
     const response = await axios(`${baseURL}/bookmarks`);
     const data = response.data;
+    this.setState({
+      bookmarks: data
+    });
   }
 
   render() {
     return (
       <div className="container">
-        <h1>Holidays! Celebrate!</h1>
+        <h1>bookmars! Celebrate!</h1>
         <NewForm />
+        <table>
+          <tbody>
+            {this.state.bookmarks.map(bookmarks => {
+              return (
+                <tr>
+                  <td key={bookmarks._id}> {bookmarks.title}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
     );
   }

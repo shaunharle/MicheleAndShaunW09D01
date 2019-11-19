@@ -1,14 +1,18 @@
 // DEPENDENCIES
 const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
+const app = express();
+
 // DEPENDENCY CONFIGURATIONS
 const PORT = 3003;
-const app = express();
-const bookmarksController = require("./controllers/bookmarks.js");
+const mongoose = require("mongoose");
+const cors = require("cors");
 
 //MIDDLEWARE
-const whitelist = ["http://localhost:3000"];
+
+const whitelist = [
+  "http://localhost:3000",
+  "https://fathomless-sierra-68956.herokuapp.com"
+];
 const corsOptions = {
   origin: (origin, callback) => {
     if (whitelist.indexOf(origin) !== -1) {
@@ -18,10 +22,11 @@ const corsOptions = {
     }
   }
 };
-// CONTROLLERS/ROUTES
-app.use(express.json());
-app.use(cors(corsOptions));
 
+const bookmarksController = require("./controllers/bookmarks.js");
+
+app.use(cors(corsOptions));
+app.use(express.json());
 app.use("/bookmarks", bookmarksController);
 // DATABASE ERROR / DISCONNECTION
 mongoose.connection.on("error", error =>
@@ -37,10 +42,6 @@ mongoose.connection.once("open", () => {
   console.log("connected to mongoose.....");
 });
 
-// app.get("/", (req, res) => {
-// 	res.send("Hello World!");
-// });
-// LISTEN
 app.listen(PORT, () => {
   console.log("BACK END CHECKING IN HERE, ALL SYSTEMS GO");
 });
