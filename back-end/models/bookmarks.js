@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 
 const bookmarksSchema = mongoose.Schema({
-	title: String,
-	url: String
+  title: String
 });
 module.exports = mongoose.model("Bookmarks", bookmarksSchema);

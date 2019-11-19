@@ -10,30 +10,31 @@ const bookmarksController = require("./controllers/bookmarks.js");
 //MIDDLEWARE
 const whitelist = ["http://localhost:3000"];
 const corsOptions = {
-	origin: (origin, callback) => {
-		if (whitelist.indexOf(origin) !== -1) {
-			callback(null, true);
-		} else {
-			callback(new Error("Not allowed by CORS"));
-		}
-	}
+  origin: (origin, callback) => {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  }
 };
 // CONTROLLERS/ROUTES
-app.use(cors(corsOptions));
 app.use(express.json());
+app.use(cors(corsOptions));
+
 app.use("/bookmarks", bookmarksController);
 // DATABASE ERROR / DISCONNECTION
 mongoose.connection.on("error", error =>
-	console.log(error.message + " mongo might not be running there, chief")
+  console.log(error.message + " mongo might not be running there, chief")
 );
 mongoose.connection.on("disconnected", () => console.log("mongo disconnected"));
 
 //DATABASE CONNECTION
 mongoose.connect("mongodb://localhost:27017/bookmarks", {
-	useNewUrlParser: true
+  useNewUrlParser: true
 });
 mongoose.connection.once("open", () => {
-	console.log("connected to mongoose.....");
+  console.log("connected to mongoose.....");
 });
 
 // app.get("/", (req, res) => {
@@ -41,5 +42,5 @@ mongoose.connection.once("open", () => {
 // });
 // LISTEN
 app.listen(PORT, () => {
-	console.log("BACK END CHECKING IN HERE, ALL SYSTEMS GO");
+  console.log("BACK END CHECKING IN HERE, ALL SYSTEMS GO");
 });
