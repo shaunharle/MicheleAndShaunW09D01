@@ -7,6 +7,7 @@ import "./css/normalize.css";
 import "./css/skeleton.css";
 import "./css/index.css";
 import Show from "./components/Show.js";
+import UpdateForm from "./components/UpdateForm.js";
 
 let baseURL = "";
 
@@ -24,13 +25,15 @@ class App extends Component {
     super(props);
     this.state = {
       bookmarks: [],
-      bookmark: {}
+      bookmark: {},
+      editButton: false,
+      selectedBookmark: {}
     };
     this.getBookmarks = this.getBookmarks.bind(this);
     this.deleteBookmarks = this.deleteBookmarks.bind(this);
     this.getBookmark = this.getBookmark.bind(this);
     this.handleAddbook = this.handleAddbook.bind(this);
-    this.sayHello = this.sayHello.bind(this);
+    this.handleEditButton = this.handleEditButton.bind(this);
   }
   componentDidMount() {
     this.getBookmarks();
@@ -53,6 +56,15 @@ class App extends Component {
     });
   }
 
+  async handleEditButton(clickedBookmark) {
+    console.log("Clicked Edit Button");
+    await this.setState({
+      editButton: true,
+      selectedBookmark: clickedBookmark
+    });
+    console.log("Current Bookmark: ", this.state.selectedBookmark);
+  }
+
   async deleteBookmarks(id) {
     await axios.delete(`${baseURL}/bookmarks/${id}`);
     const filteredBookmarks = this.state.bookmarks.filter(bookmarks => {
@@ -64,10 +76,6 @@ class App extends Component {
     });
   }
 
-  sayHello() {
-    alert("Hello!");
-  }
-
   render() {
     return (
       <div className="container">
@@ -77,7 +85,7 @@ class App extends Component {
           </header>
 
           <div className="bo">
-            <h1 style={{ color: "yellow" }}>Add a new Bookmars!!</h1>
+            <h1 style={{ color: "yellow" }}>Add a new Bookmarks!!</h1>
             <NewForm handleAddbook={this.handleAddbook} baseURL={baseURL} />
             <tbody>
               {this.state.bookmarks.map(bookmarks => {
@@ -87,25 +95,32 @@ class App extends Component {
                       key={bookmarks._id}
                       onMouseOver={() => this.getBookmark(bookmarks)}
                     >
-                      <h1> CIAO {bookmarks.title}</h1>
-                      <ul>
-                        <li>{bookmarks.title}</li>
-                      </ul>
+                      <h1> Title {bookmarks.title}</h1>
 
                       <a href={bookmarks.url} target="_blank">
                         {bookmarks.url}
                       </a>
                     </td>
-                    <td onClick={() => this.deleteBookmarks(bookmarks._id)}>
-                      X
+
+                    <td>
+                      <button
+                        onClick={() => this.deleteBookmarks(bookmarks._id)}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                    <td>
+                      <button onClick={() => this.handleEditButton(bookmarks)}>
+                        Edit
+                      </button>
                     </td>
                   </tr>
                 );
               })}
             </tbody>
-            {this.state.bookmark && <Show bookmark={this.state.bookmark} />}
           </div>
         </table>
+        {this.state.bookmark && <Show bookmark={this.state.bookmark} />}
       </div>
     );
   }
